@@ -43,6 +43,19 @@ RUN apk add --no-cache ca-certificates wget \
  && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties \
  && mkdir ~/.android \
  && touch ~/.android/repositories.cfg \
- && yes | sdkmanager --licenses \
- && sdkmanager --update \
- && sdkmanager "platforms;android-${ANDROID_TARGET_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" platform-tools
+ && yes | sdkmanager --licenses > /dev/null \
+ && sdkmanager --update > /dev/null \
+ && sdkmanager "platforms;android-${ANDROID_TARGET_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" platform-tools > /dev/null
+
+# Install NDK
+RUN wget -q -O android-ndk.zip https://dl.google.com/android/repository/android-ndk-r13b-linux-x86_64.zip \
+ && unzip -qo android-ndk.zip
+
+ENV ANDROID_NDK=${PWD}/android-ndk-r13b
+ENV PATH=${PATH}:${ANDROID_NDK}
+
+# Install libstdc++6, gpg, and cmake
+RUN apk add --no-cache libstdc++ gnupg \
+ && wget -q -O install-cmake.sh https://github.com/Commit451/android-cmake-installer/releases/download/1.1.0/install-cmake.sh \
+ && chmod +x install-cmake.sh \
+ && ./install-cmake.sh
