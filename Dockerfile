@@ -25,4 +25,7 @@ RUN apt-get update \
  && touch ~/.android/repositories.cfg \
  && yes | sdkmanager --licenses > /dev/null \
  && sdkmanager --update > /dev/null \
- && sdkmanager "platforms;android-${ANDROID_TARGET_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" platform-tools tools "extras;android;m2repository" ndk-bundle "cmake;3.6.4111459" > /dev/null
+ && sdkmanager "platforms;android-${ANDROID_TARGET_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" platform-tools tools "extras;android;m2repository" "cmake;3.6.4111459" > /dev/null \
+ && wget -q -O ndk-bundle.zip https://dl.google.com/android/repository/android-ndk-r16-beta1-linux-x86_64.zip \
+ && unzip -qo ndk-bundle.zip -d ${ANDROID_HOME}/ndk-bundle \
+ && rm ndk-bundle.zip
